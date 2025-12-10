@@ -1,0 +1,43 @@
+import axios from 'axios';
+import toast from 'react-hot-toast';
+
+const apiClient = axios.create({
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8080',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+apiClient.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Response interceptor - Handle errors globally
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      // Unauthorized - clear token and redirect to login
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.location.href = '/login';
+      toast.error('Session expired. Please login again.');
+    } else if (error.response?.data?.error) {
+      toast.error(error.response.data.error);
+    } else {
+      toast.error('An error occurred. Please try again.');
+    }
+    return Promise.reject(error);
+  }
+);
+
+export default apiClient;
