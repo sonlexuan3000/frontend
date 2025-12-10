@@ -5,6 +5,7 @@ import { formatRelativeTime } from '../../utils/formatDate';
 import { useAuthStore } from '../../store/authStore';
 import Card from '../common/Card';
 import Button from '../common/Button';
+import VoteButtons from './VoteButtons';
 
 interface PostCardProps {
   post: Post;
@@ -19,6 +20,13 @@ export default function PostCard({ post, onEdit, onDelete }: PostCardProps) {
   return (
     <Card hover className="group">
       <div className="flex items-start justify-between gap-4">
+
+        <VoteButtons
+          postId={post.id}
+          initialVoteCount={post.vote_count}
+          initialUserVote={post.user_vote}
+        />
+
         <div className="flex-1 min-w-0">
           <Link 
             to={`/posts/${post.id}`}

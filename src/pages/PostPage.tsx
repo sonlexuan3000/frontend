@@ -15,6 +15,7 @@ import DeleteConfirmModal from '../components/common/DeleteConfirmModal';
 import { formatRelativeTime } from '../utils/formatDate';
 import toast from 'react-hot-toast';
 import { countTotalComments } from '../utils/countComments';
+import VoteButtons from '../components/posts/VoteButtons';
 
 export default function PostPage() {
   const { postId } = useParams<{ postId: string }>();
@@ -166,27 +167,36 @@ export default function PostPage() {
 
       {/* Post content */}
       <Card className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-4">{post.title}</h1>
-        
-        <div className="flex items-center gap-4 text-sm text-gray-600 mb-6 pb-4 border-b">
-          <div className="flex items-center gap-1">
-            <User size={16} />
-            <span className="font-medium">{post.creator.username}</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <Calendar size={16} />
-            <span>{formatRelativeTime(post.created_at)}</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <MessageSquare size={16} />
-            <span>{totalComments} {totalComments === 1 ? 'comment' : 'comments'}</span>
-          </div>
-        </div>
+        <div className="flex items-start gap-4">
+            <VoteButtons
+                postId={post.id}
+                initialVoteCount={post.vote_count}
+                initialUserVote={post.user_vote}
+            />
+            <div className="flex-1">
+                <h1 className="text-3xl font-bold text-gray-900 mb-4">{post.title}</h1>
+                
+                <div className="flex items-center gap-4 text-sm text-gray-600 mb-6 pb-4 border-b">
+                <div className="flex items-center gap-1">
+                    <User size={16} />
+                    <span className="font-medium">{post.creator.username}</span>
+                </div>
+                <div className="flex items-center gap-1">
+                    <Calendar size={16} />
+                    <span>{formatRelativeTime(post.created_at)}</span>
+                </div>
+                <div className="flex items-center gap-1">
+                    <MessageSquare size={16} />
+                    <span>{totalComments} {totalComments === 1 ? 'comment' : 'comments'}</span>
+                </div>
+                </div>
 
-        <div className="prose max-w-none">
-          <p className="text-gray-700 whitespace-pre-wrap break-words">
-            {post.content}
-          </p>
+                <div className="prose max-w-none">
+                <p className="text-gray-700 whitespace-pre-wrap break-words">
+                    {post.content}
+                </p>
+                </div>
+            </div>
         </div>
       </Card>
 

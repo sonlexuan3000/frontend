@@ -25,6 +25,8 @@ export interface Post {
   creator: User;
   created_at: string;
   updated_at: string;
+  vote_count: number;      
+  user_vote: number;
 }
 
 export interface Comment {
